@@ -1,0 +1,2 @@
+# nine_star_ki_simple_diagnosis_vuejs.github.io
+nine_star_ki_simple_diagnosis_vuejs
