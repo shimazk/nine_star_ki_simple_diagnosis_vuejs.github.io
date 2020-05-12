@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF8" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta name="copyright" content="Copyright XSERVER Inc." />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta id="meta" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>九星気学の簡易鑑定ページ</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <p>
+            <select v-model="birth_year">
+                <option v-for="(name, value) in indexRangeHash(1810, currentYear + 10)" v-bind:value="value">{{ name }}</option>
+            </select>
+            <select v-model="birth_month">
+                <option v-for="(name, value) in indexRangeHash(1, 12)" v-bind:value="value">{{ name }}</option>
+            </select>
+            <select v-model="birth_day">
+                <option v-for="(name, value) in indexRangeHash(1, 31)" v-bind:value="value">{{ name }}</option>
+            </select>
+            <select v-model="sex">
+                <option v-for="(name, value) in sexHash" v-bind:value="value">{{ name }}</option>
+            </select>
+            <p>干支: {{ tenHeavenlyStemChar + orientalZodiacChar + " (" + orientalZodiacTenHeavenlySteamName + ")" }}</p>
+            <p>納音: {{ nacchinName(fiscal_year) }}</p>
+        </p>
+        <p>
+            <select v-model="nine_star_year">
+                <option v-for="(name, value) in nineStarNameHash" v-bind:value="value">{{ name }}</option>
+            </select>
+            <select v-model="nine_star_month">
+                <option v-for="(name, value) in nineStarNameHash" v-bind:value="value">{{ name }}</option>
+            </select>
+            <select id="selectNineStarSex" v-model="sex">
+                <option v-for="(name, value) in sexHash" v-bind:value="value">{{ name }}</option>
+            </select>
+            <p>{{ nine_star_year + ' - ' + nine_star_month }}</p>
+            <p>{{ '本命: ' + nineStarNameHash[nine_star_year] }}<span v-if="isHeadFamilyStar(oriental_zodiac_number, nine_star_year)">{{' (' + orientalZodiacChar + ')' }}</span></p>
+            <p>{{ '月命: ' + nineStarNameHash[nine_star_ki_month] }}</p>
+            <p>{{ '最大吉方: ' + nineStarMaxLuckDirection(nine_star_year, nine_star_ki_month).map(x => nineStarNameHash[x]).join(',') }}</p>
+            <p>{{ '同会: ' + nineStarNameHash[nineStarDokai(nine_star_year, nine_star_ki_month, sex)] }}</p>
+            <p>{{ '傾斜: ' + nineStarNameHash[nineStarSlope(nine_star_year, nine_star_ki_month, sex)] }}</p>
+        </p>
+        <p>
+            <select v-model="upper_gua">
+                <option v-for="(name, value) in natureNameHash" v-bind:value="value">{{ name }}</option>
+            </select>
+            <select v-model="lower_gua">
+                <option v-for="(name, value) in natureNameHash" v-bind:value="value">{{ name }}</option>
+            </select>
+            <p>大成卦: {{ yinYangName([upper_gua, lower_gua]) }}</p>
+            <p>裏卦(錯卦): {{ yinYangName(rikaYinYangArray([upper_gua, lower_gua])) }}</p>
+            <p>賓卦(綜卦): {{ yinYangName(hinkaYinYangArray([upper_gua, lower_gua])) }}</p>
+            <p>互卦: {{ yinYangName(gokaYinYangArray([upper_gua, lower_gua])) }}</p>
+        </p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
